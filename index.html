@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>&nbsp;</title> <style>
+        :root {
+            --preview-width: 210mm;
+            --preview-height: 297mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+        }
+
+        /* Input Panel Styling */
+        .input-panel {
+            width: 350px;
+            height: 100vh;
+            background: #ffffff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .input-panel h2 { font-size: 1.2rem; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* Preview Area Styling */
+        .preview-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+            background: #e0e0e0;
+        }
+
+        /* A4 Page Styling */
+        .a4-page {
+            width: var(--preview-width);
+            height: var(--preview-height);
+            background: white;
+            padding: 20mm;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .course-code { font-size: 24pt; font-weight: bold; margin-top: 40px; }
+        .teacher-info { font-size: 14pt; margin-top: 20px; line-height: 1.6; }
+        .exp-group { font-size: 22pt; font-weight: bold; margin-top: 80px; }
+        
+        .title-box {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 15px 30px;
+            margin-top: 20px;
+            font-size: 14pt;
+            width: 80%;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .student-info { margin-top: 80px; font-size: 16pt; line-height: 1.8; }
+        .student-name { font-weight: bold; font-size: 18pt; margin-bottom: 10px; }
+        .submission-date { margin-top: 80px; font-size: 14pt; }
+        
+        .footer-info {
+            position: absolute;
+            bottom: 40mm;
+            font-size: 14pt;
+            line-height: 1.8;
+            text-transform: capitalize;
+        }
+
+        #logo-preview {
+            max-width: 120px;
+            max-height: 120px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        /* Print Settings to remove Headers/Footers */
+        @media print {
+            @page {
+                margin: 0; /* মার্জিন জিরো করলে ব্রাউজার টেক্সটগুলো রিমুভ হয়ে যাবে */
+            }
+            body { margin: 0; background: white; }
+            .input-panel { display: none !important; }
+            .preview-area { padding: 0 !important; background: none !important; }
+            .a4-page { box-shadow: none !important; margin: 0 !important; }
+        }
+
+        .btn-print {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="input-panel">
+        <h2>Settings</h2>
+        
+        <div class="form-group">
+            <label>University Logo</label>
+            <input type="file" id="logoInput" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label>Course Code</label>
+            <input type="text" id="inCourse" value="EEE132.1: Electrical Circuit Laboratory" oninput="update()">
+        </div>
+
+        <div class="form-group">
+            <label>Teacher Name</label>
+            <input type="text" id="inTeacher" value="Farzana Alam (FRL)" oninput="update()">
+        </div>
+
+        <div class="form-group">
+            <label>Designation</label>
+            <input type="text" id="inDesig" value="Lecturer, Department of Electrical & Electronic Engineering" oninput="update()">
+        </div>
+
+        <div class="form-group">
+            <label>Experiment No</label>
+            <input type="text" id="inExp" value="Experiment 2 & Group 4" oninput="update()">
+        </div>
+
+        <div class="form-group">
+            <label>Topic</label>
+            <textarea id="inTitle" rows="3" oninput="update()">Study and verification of kirchhoff's current law and voltage law</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Student Name</label>
+            <input type="text" id="inName" value="Md Rifat Ariean Nabil" oninput="update()">
+        </div>
+
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="text" id="inID" value="ID No.: 2024200500034" oninput="update()">
+        </div>
+
+        <div class="form-group">
+            <label>Batch & Section</label>
+            <input type="text" id="inBatch" value="Batch: 45, Section: A" oninput="update()">
+        </div>
+
+        <div class="form-group">
+            <label>Submission Date</label>
+            <input type="text" id="inDate" value="Date of Submission: 26 July 2025" oninput="update()">
+        </div>
+
+        <div class="form-group">
+            <label>Department</label>
+            <input type="text" id="inDept" value="Department of Electrical & Electronic Engineering" oninput="update()">
+        </div>
+
+        <div class="form-group">
+            <label>University</label>
+            <input type="text" id="inUni" value="southeast university" oninput="update()">
+        </div>
+
+        <button class="btn-print" onclick="window.print()">Download Cover Page</button>
+    </div>
+
+    <div class="preview-area">
+        <div class="a4-page">
+            <img id="logo-preview" src="" alt="Logo">
+            <div class="course-code" id="outCourse"></div>
+            <div class="teacher-info">
+                <div id="outTeacher"></div>
+                <div id="outDesig"></div>
+            </div>
+            <div class="exp-group" id="outExp"></div>
+            <div class="title-box" id="outTitle"></div>
+            <div class="student-info">
+                <div class="student-name" id="outName"></div>
+                <div id="outID"></div>
+                <div id="outBatch"></div>
+            </div>
+            <div class="submission-date" id="outDate"></div>
+            <div class="footer-info">
+                <div id="outDept"></div>
+                <div id="outUni"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function update() {
+            document.getElementById('outCourse').innerText = document.getElementById('inCourse').value;
+            document.getElementById('outTeacher').innerText = document.getElementById('inTeacher').value;
+            document.getElementById('outDesig').innerText = document.getElementById('inDesig').value;
+            document.getElementById('outExp').innerText = document.getElementById('inExp').value;
+            document.getElementById('outTitle').innerText = document.getElementById('inTitle').value;
+            document.getElementById('outName').innerText = document.getElementById('inName').value;
+            document.getElementById('outID').innerText = document.getElementById('inID').value;
+            document.getElementById('outBatch').innerText = document.getElementById('inBatch').value;
+            document.getElementById('outDate').innerText = document.getElementById('inDate').value;
+            document.getElementById('outDept').innerText = document.getElementById('inDept').value;
+            document.getElementById('outUni').innerText = document.getElementById('inUni').value;
+        }
+
+        const logoInput = document.getElementById('logoInput');
+        const logoPreview = document.getElementById('logo-preview');
+
+        window.onload = function() {
+            const savedLogo = localStorage.getItem('universityLogo');
+            if (savedLogo) {
+                logoPreview.src = savedLogo;
+                logoPreview.style.display = 'block';
+            }
+            update();
+        }
+
+        logoInput.onchange = function(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                localStorage.setItem('universityLogo', reader.result);
+                logoPreview.src = reader.result;
+                logoPreview.style.display = 'block';
+            }
+            if (file) reader.readAsDataURL(file);
+        };
+    </script>
+</body>
+</html>
